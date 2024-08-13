@@ -1,1 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrichment Booking System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <style>
+        /*  CSS styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+            color: #333;
+        }
 
+        nav {
+            background: linear-gradient(90deg, #c8102e, #a00);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 1.5rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #ffebeb;
+        }
+
+        .logo {
+            height: 60px;
+            /* Adjusted for a more prominent display */
+        }
+
+        .main-menu {
+            padding: 4rem 2rem;
+            text-align: center;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+
+        .main-menu h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #c8102e;
+            font-weight: 700;
+        }
+
+        .title-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+        }
+
+        .title-box {
+            position: relative;
+            width: 250px;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .title-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .title-box a {
+            display: block;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .title-image {
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0.7;
+        }
+
+        .title-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            text-align: center;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .title-text h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #c8102e;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #c8102e;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background-color: #c8102e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #a00;
+            transform: scale(1.02);
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+
+        .activity,
+        .scheduled-activity {
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity h3,
+        .scheduled-activity h3 {
+            margin-top: 0;
+            color: #c8102e;
+            font-weight: 700;
+        }
+
+        .activity p,
+        .scheduled-activity p {
+            margin: 0.5rem 0;
+        }
+
+        .sign-up-btn {
+            padding: 0.5rem 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .sign-up-btn:hover {
+            background-color: #45a049;
+            transform: scale(1.02);
+        }
+
+        .admin-assign-form {
+            display: none;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="https://example.com/enrichment-logo.png" alt="Enrichment Logo" class="logo">
+            <!-- Replace with the actual image URL -->
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#login">Login</a></li>
+            </ul>
+        </nav>
+
+        <div id="home" class="main-menu">
+            <h1>Welcome to the Enrichment Booking System</h1>
+            <div class="title-container">
+                <div class="title-box">
+                    <a href="#enrichment_activities">
+                        <div class="title-image"
+                            style="background-image: url('https://www.ncgrp.co.uk/media/jb5p1ayg/southwark-college-49.jpg?width=508&height=290&rnd=132948310258200000.');"></div>
+                        <div class="title-text">
+                            <h2>General Enrichment Activities</h2>
+                        </div>
+                    </a>
+                </div>
+                <div class="title-box">
+                    <a href="#calendar">
+                        <div class="title-image"
+                            style="background-image: url('https://www.pngall.com/wp-content/uploads/2016/10/Calendar-PNG-Picture.png');"></div>
+                        <div class="title-text">
+                            <h2>Enrichment Activities Calendar</h2>
+                        </div>
+                    </a>
+                </div>
+                <div class="title-box">
+                    <a href="#scheduled_activities">
+                        <div class="title-image"
+                            style="background-image:url('https://www.southwark.ac.uk/images/News_Images/Swk_engineering_workshops-1_1.jpg'); "></div>
+                        <div class="title-text">
+                            <h2>Assigned Enrichment Activities</h2>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="enrichment_activities" class="activities-list main-menu">
+            <h1>General Enrichment Activities</h1>
+            <div class="activity">
+                <h3>Activity Title</h3>
+                <p>Description of the activity.</p>
+                <p><strong>Date:</strong> YYYY-MM-DD</p>
+                <p><strong>Time:</strong> HH:MM</p>
+                <p><strong>Location:</strong> Location details</p>
+                <button class="sign-up-btn" data-title="Activity Title" data-description="Description of the activity."
+                    data-date="YYYY-MM-DD" data-time="HH:MM" data-location="Location details">Sign Up</button>
+            </div>
+            <!-- Repeat similar blocks for each activity -->
+        </div>
+        
+
+    <div id="calendar" class="main-menu">
+        <h1>Enrichment Activities Calendar</h1>
+        <div id="calendar-container"></div>
+    </div>
+
+    <div id="schedule_activity" class="main-menu" style="display: none;">
+        <h1>Schedule Enrichment Activity</h1>
+        <form id="schedule-form">
+            <div class="form-group">
+                <label for="activity-title">Activity Title</label>
+                <input type="text" id="activity-title" name="activity-title" required>
+            </div>
+            <div class="form-group">
+                <label for="activity-description">Description</label>
+                <textarea id="activity-description" name="activity-description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="activity-date">Date</label>
+                <input type="date" id="activity-date" name="activity-date" required>
+            </div>
+            <div class="form-group">
+                <label for="activity-time">Time</label>
+                <input type="time" id="activity-time" name="activity-time" required>
+            </div>
+            <div class="form-group">
+                <label for="activity-location">Location</label>
+                <input type="text" id="activity-location" name="activity-location" required>
+            </div>
+            <button type="submit">Schedule Activity</button>
+        </form>
+    </div>
+
+    <div id="admin_assign" class="admin-assign-form main-menu" style="display: none;">
+        <h1>Assign Activity to Students</h1>
+        <form id="assign-form">
+            <div class="form-group">
+                <label for="assign-activity">Activity Title</label>
+                <input type="text" id="assign-activity" name="assign-activity" required>
+            </div>
+            <div class="form-group">
+                <label for="student-emails">Student Emails (comma-separated)</label>
+                <input type="text" id="student-emails" name="student-emails" required>
+            </div>
+            <button type="submit">Assign Activity</button>
+        </form>
+    </div>
+
+    <div id="scheduled_activities" class="main-menu">
+        <h1>Assigned Enrichment Activities</h1>
+        <div class="scheduled-activities-list">
+            <div class="scheduled-activity">
+                <h3>Activity Title</h3>
+                <p>Description of the activity.</p>
+                <p><strong>Date:</strong> YYYY-MM-DD</p>
+                <p><strong>Time:</strong> HH:MM</p>
+                <p><strong>Location:</strong> Location details</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="login" class="main-menu">
+        <h1>Login</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var events = [
+                { title: 'Student Welcome', start: '2024-09-02' },
+                { title: 'Student Union Sign Up', start: '2024-09-03' },
+                { title: 'Student Union Sign Up', start: '2024-09-04' },
+                { title: 'Student Union Sign Up', start: '2024-09-05' },
+                { title: 'Student Union Sign Up', start: '2024-09-06' },
+                { title: 'Student Union Sign Up', start: '2024-09-09' },
+                { title: 'Student Union Meeting', start: '2024-09-10' },
+                { title: 'Student Union Campaigning', start: '2024-09-11' },
+                { title: 'Student Union Campaigning', start: '2024-09-12' },
+                { title: 'Student Union Campaigning', start: '2024-09-13' },
+                { title: 'Freshers Fair', start: '2024-09-16' },
+                { title: 'Student Union Campaigning', start: '2024-09-17' },
+                { title: 'Student Union Campaigning', start: '2024-09-18' },
+                { title: 'Student Union Campaigning', start: '2024-09-19' },
+                { title: 'Student Union Voting', start: '2024-09-20' },
+                { title: 'Book Club', start: '2024-09-23' },
+                { title: 'Cheerleading (TBC)', start: '2024-09-24' },
+                { title: 'Football (TBC)', start: '2024-09-24' },
+                { title: 'Student Union Winner Announcement', start: '2024-09-25' },
+                { title: 'Tennis (TBC)', start: '2024-09-25' },
+                { title: 'Circus Skills (TBC)', start: '2024-09-26' },
+                { title: 'College Trip to Tate Modern', start: '2024-09-27' },
+                { title: 'OBA Workshop', start: '2024-09-30' },
+                { title: 'Course Rep Meeting', start: '2024-10-02' },
+                { title: 'Law Society', start: '2024-10-07' },
+                { title: 'London Fashion Week (TBC)', start: '2024-10-10' }
+                { title: 'London Fashion Week (TBC)', start: '2024-10-10' }
+            ];
+
+            $('#calendar-container').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                editable: true,
+                events: events
+            });
+            document.getElementById('login-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var email = document.getElementById('email').value;
+                if (email.match(/^[s]\d{7}@students\.southwark\.ac\.uk$/)) {
+                    alert('Student logged in');
+                    document.getElementById('schedule_activity').style.display = 'none';
+                    document.getElementById('admin_assign').style.display = 'none';
+                    showStudentActivities(email);
+                } else if (email.match(/^[a-z]+\.[a-z]+@southwark\.ac\.uk$/)) {
+                    alert('Teacher/Admin logged in');
+                    document.getElementById('schedule_activity').style.display = 'block';
+                    document.getElementById('admin_assign').style.display = 'block';
+                    loadAdminAssignedActivities();
+                } else {
+                        alert('Invalid email address');
+                       }
+                });
+
+        function showStudentActivities(email) {
+            var activities = document.querySelectorAll('.activity');
+            activities.forEach(function (activity) {
+            var button = activity.querySelector('.sign-up-btn');
+               if (!button.dataset.assigned || button.dataset.assigned === email) {
+                   button.style.display = 'block';
+                } else {
+                        button.style.display = 'none';
+                       }
+                });
+        }
+
+        function loadAdminAssignedActivities() {
+            var activities = document.querySelectorAll('.activity');
+            activities.forEach(function (activity) {
+            var button = activity.querySelector('.sign-up-btn');
+            button.style.display = 'none';
+            });
+        }
+            $('#schedule-form').submit(function (event) {
+            event.preventDefault();
+            var title = $('#activity-title').val();
+            var description = $('#activity-description').val();
+            var date = $('#activity-date').val();
+            var time = $('#activity-time').val();
+            var location = $('#activity-location').val();
+            var datetime = date + 'T' + time;
+
+            var newEvent = {
+                            title: title,
+                            start: datetime,
+                            description: description
+                            };
+
+                            events.push(newEvent);
+                            $('#calendar').fullCalendar('renderEvent', newEvent, true);
+
+                            // Clear form fields
+                            $('#schedule-form')[0].reset();
+                        });
+
+                        $('#assign-form').submit(function (event) {
+                            event.preventDefault();
+                            var activityTitle = $('#assign-activity').val();
+                            var emails = $('#student-emails').val().split(',').map(email => email.trim());
+                            var activities = document.querySelectorAll('.activity');
+
+                            activities.forEach(function (activity) {
+                                if (activity.querySelector('h3').textContent === activityTitle) {
+                                    emails.forEach(email => {
+                                        activity.querySelector('.sign-up-btn').dataset.assigned = email;
+                                    });
+                                }
+                            });
+
+                            // Clear form fields
+                            $('#assign-form')[0].reset();
+                        });
+
+                        $('.sign-up-btn').click(function () {
+                            var title = $(this).data('title');
+                            var description = $(this).data('description');
+                            var date = $(this).data('date');
+                            var time = $(this).data('time');
+                            var location = $(this).data('location');
+                            var email = $('#email').val();
+
+                            if (!email) {
+                                alert('Please log in to sign up for activities.');
+                                return;
+                            }
+
+                            alert('Signed up for activity: ' + title);
+                            
+          $(this).hide(); // Hide the button after sign-up
+            });
+        });
+    </script>
+</body>
+</html>
+        
