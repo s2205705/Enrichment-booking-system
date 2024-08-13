@@ -1,0 +1,4 @@
+title: Enrichment Booking System
+description: A system for booking enrichment activities.
+url: "https://www.enrichment_booking_system.com" # Base URL for the site
+baseurl: "docs" # If deploying to the root of the domain, keep this empty
