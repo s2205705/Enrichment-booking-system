@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <meta charset="UTF-8">
@@ -399,21 +400,6 @@
             </div>
         </div>
 
-        <div id="login" class="main-menu">
-            <h1>Login</h1>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit">Login</button>
-            </form>
-        </div>
-
         <script>
             $(document).ready(function () {
                 var events = [
@@ -444,6 +430,44 @@
                     { title: 'Law Society', start: '2024-10-07' },
                     { title: 'London Fashion Week (TBC)', start: '2024-10-10' }
                 ];
+
+                document.getElementById('login-form').addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    var email = document.getElementById('email').value;
+                    if (email.match(/^[s]\d{7}@students\.southwark\.ac\.uk$/)) {
+                        alert('Student logged in');
+                        document.getElementById('schedule_activity').style.display = 'none';
+                        document.getElementById('admin_assign').style.display = 'none';
+                        showStudentActivities(email);
+                    } else if (email.match(/^[a-z]+\.[a-z]+@southwark\.ac\.uk$/)) {
+                        alert('Teacher/Admin logged in');
+                        document.getElementById('schedule_activity').style.display = 'block';
+                        document.getElementById('admin_assign').style.display = 'block';
+                        loadAdminAssignedActivities();
+                    } else {
+                        alert('Invalid email address');
+                    }
+                });
+
+                function showStudentActivities(email) {
+                    var activities = document.querySelectorAll('.activity');
+                    activities.forEach(function (activity) {
+                        var button = activity.querySelector('.sign-up-btn');
+                        if (!button.dataset.assigned || button.dataset.assigned === email) {
+                            button.style.display = 'block';
+                        } else {
+                            button.style.display = 'none';
+                        }
+                    });
+                }
+
+                function loadAdminAssignedActivities() {
+                    var activities = document.querySelectorAll('.activity');
+                    activities.forEach(function (activity) {
+                        var button = activity.querySelector('.sign-up-btn');
+                        button.style.display = 'none';
+                    });
+                }
 
                 $('#calendar-container').fullCalendar({
                     header: {
@@ -494,7 +518,7 @@
                     alert('Activity scheduled successfully!');
                     $('#schedule-form')[0].reset();
                 });
-
+                
                 $('#assign-form').submit(function (e) {
                     e.preventDefault();
                     alert('Activity assigned successfully!');
@@ -502,4 +526,21 @@
                 });
             });
     </script>
-   
+
+        <div id="login" class="main-menu">
+            <h1>Login</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    <script>
+</body>
+</html>
