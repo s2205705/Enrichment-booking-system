@@ -69,7 +69,12 @@
                 $('#admin_assign').hide();
                 showStudentActivities(email);
             } else if (teacherRegex.test(email)) {
-                alert('Teacher/Admin logged in');
+                alert('Teacher logged in');
+                $('#schedule_activity').hide();
+                $('#admin_assign').hide();
+                showStudentActivities(email);
+            } else if (adminRegex.test(email)) {
+                alert('Admin logged in');
                 $('#schedule_activity').show();
                 $('#admin_assign').show();
                 loadAdminAssignedActivities();
