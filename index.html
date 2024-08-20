@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
     <meta charset="UTF-8">
@@ -431,77 +430,101 @@
                     { title: 'London Fashion Week (TBC)', start: '2024-10-10' }
                 ];
 
-                document.getElementById('login-form').addEventListener('submit', function (event) {
-                    event.preventDefault();
-                    var email = document.getElementById('email').value;
-                    if (email.match(/^[s]\d{7}@students\.southwark\.ac\.uk$/)) {
-                        alert('Student logged in');
-                        document.getElementById('schedule_activity').style.display = 'none';
-                        document.getElementById('admin_assign').style.display = 'none';
-                        showStudentActivities(email);
-                    } else if (email.match(/^[a-z]+\.[a-z]+@southwark\.ac\.uk$/)) {
-                        alert('Teacher/Admin logged in');
-                        document.getElementById('schedule_activity').style.display = 'block';
-                        document.getElementById('admin_assign').style.display = 'block';
-                        loadAdminAssignedActivities();
-                    } else {
-                        alert('Invalid email address');
-                    }
-                });
+                 document.getElementById('login-form').addEventListener('submit', function (event) {
+                            event.preventDefault();
+                            var email = document.getElementById('email').value;
+                            var adminEmails = ['aisha.weekestyndale@southwark.ac.uk', 'jose.leoneldesilva@southwark.ac.uk'];
 
-                function showStudentActivities(email) {
-                    var activities = document.querySelectorAll('.activity');
-                    activities.forEach(function (activity) {
-                        var button = activity.querySelector('.sign-up-btn');
-                        if (!button.dataset.assigned || button.dataset.assigned === email) {
-                            button.style.display = 'block';
-                        } else {
-                            button.style.display = 'none';
+                            if (email.match(/^[s]\d{7}@students\.southwark\.ac\.uk$/)) {
+                                alert('Student logged in');
+                                document.getElementById('schedule_activity').style.display = 'none';
+                                document.getElementById('admin_assign').style.display = 'none';
+                                showStudentActivities(email);
+                            } else if (adminEmails.includes(email)) {
+                                alert('Teacher/Admin logged in');
+                                document.getElementById('schedule_activity').style.display = 'block';
+                                document.getElementById('admin_assign').style.display = 'block';
+                                loadAdminAssignedActivities();
+                            } else {
+                                alert('Invalid email address or unauthorized access');
+                            }
+                        });
+
+                        function showStudentActivities(email) {
+                            var activities = document.querySelectorAll('.activity');
+                            activities.forEach(function (activity) {
+                                var button = activity.querySelector('.sign-up-btn');
+                                if (!button.dataset.assigned || button.dataset.assigned === email) {
+                button.style.display = 'block';
+                                } else {
+                button.style.display = 'none';
+                                }
+                            });
                         }
-                    });
-                }
 
-                function loadAdminAssignedActivities() {
-                    var activities = document.querySelectorAll('.activity');
-                    activities.forEach(function (activity) {
-                        var button = activity.querySelector('.sign-up-btn');
-                        button.style.display = 'none';
-                    });
-                }
+                        function loadAdminAssignedActivities() {
+                            var activities = document.querySelectorAll('.activity');
+                            activities.forEach(function (activity) {
+                                var button = activity.querySelector('.sign-up-btn');
+                button.style.display = 'none';
+                            });
+                        }
 
-                $('#calendar-container').fullCalendar({
-                    header: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'month,agendaWeek,agendaDay'
-                    },
-                    editable: true,
-                    events: events
-                });
+                        $('#calendar-container').fullCalendar({
+                            header: {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'month,agendaWeek,agendaDay'
+                            },
+                            editable: true,
+                            events: events
+                        });
 
-                $('.sign-up-btn').click(function () {
-                    var title = $(this).data('title');
-                    var description = $(this).data('description');
-                    var date = $(this).data('date');
-                    var time = $(this).data('time');
-                    var location = $(this).data('location');
+                        $('.sign-up-btn').click(function () {
+                            var title = $(this).data('title');
+                            var description = $(this).data('description');
+                            var date = $(this).data('date');
+                            var time = $(this).data('time');
+                            var location = $(this).data('location');
 
-                    var scheduledActivityHTML = `
-                        <div class="scheduled-activity">
-                            <h3>${title}</h3>
-                            <p>${description}</p>
-                            <p><strong>Date:</strong> ${date}</p>
-                            <p><strong>Time:</strong> ${time}</p>
-                            <p><strong>Location:</strong> ${location}</p>
-                        </div>
-                    `;
+                            var scheduledActivityHTML = `
+                                <div class="scheduled-activity">
+                                    <h3>${title}</h3>
+                                    <p>${description}</p>
+                                    <p><strong>Date:</strong> ${date}</p>
+                                    <p><strong>Time:</strong> ${time}</p>
+                                    <p><strong>Location:</strong> ${location}</p>
+                                </div>
+                            `;
 
-                    $('.scheduled-activities-list').append(scheduledActivityHTML);
-                    alert('You have signed up for the activity!');
-                });
+                            $('.scheduled-activities-list').append(scheduledActivityHTML);
+                            alert('You have signed up for the activity!');
+                        });
 
-                $('#schedule-form').submit(function (e) {
-                    e.preventDefault();
+                        $('#schedule-form').submit(function (e) {
+                            e.preventDefault();
+                            var title = $('#activity-title').val();
+                            var description = $('#activity-description').val();
+                            var date = $('#activity-date').val();
+                            var time = $('#activity-time').val();
+                            var location = $('#activity-location').val();
+
+                            var newEvent = {
+                                title: title,
+                                start: date + 'T' + time
+                            };
+
+                            $('#calendar-container').fullCalendar('renderEvent', newEvent, true);
+
+                            alert('Activity scheduled successfully!');
+                            $('#schedule-form')[0].reset();
+                        });
+
+                        $('#assign-form').submit(function (e) {
+                            e.preventDefault();
+                            alert('Activity assigned successfully!');
+                            $('#assign-form')[0].reset()
+
                     var title = $('#activity-title').val();
                     var description = $('#activity-description').val();
                     var date = $('#activity-date').val();
@@ -542,5 +565,33 @@
             </form>
         </div>
     <script>
+
+        <!-- Content Security Policy (CSP) to prevent XSS -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none';">
+
+        <!--Content-Type-Options to prevent MIME-sniffing -->
+        <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
+        <!--Frame-Options to prevent clickjacking -->
+        <meta http-equiv="X-Frame-Options" content="DENY">
+
+        <!-- Referrer-Policy to control referrer information -->
+        <meta name="referrer" content="no-referrer-when-downgrade">
+
+        <!--XSS-Protection to enable the browser's XSS filter -->
+        <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+
+        <!--Secure Form  -->
+        <form action="/submit" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <!-- Anti-CSRF Token -->
+            <input type="hidden" name="csrf_token" value="random_generated_token">
+            <button type="submit">Login</button>
+        </form>
+
+        <!-- Input validation that restricts user input in order to prevent SQL injections-->
+        <input type="email" name="email" placeholder="Email Address" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+            
 </body>
 </html>
