@@ -440,11 +440,17 @@
                                 document.getElementById('schedule_activity').style.display = 'none';
                                 document.getElementById('admin_assign').style.display = 'none';
                                 showStudentActivities(email);
+                            }else if (email.match(/^[s]\d{7}@southwark\.ac\.uk$/)) {
+                     alert('Teacher logged in');
+                     document.getElementById('schedule_activity').style.display = 'none';
+                     document.getElementById('admin_assign').style.display = 'none';
+                     showStudentActivities(email);
                             } else if (adminEmails.includes(email)) {
-                                alert('Teacher/Admin logged in');
+                                alert('Admin logged in');
                                 document.getElementById('schedule_activity').style.display = 'block';
                                 document.getElementById('admin_assign').style.display = 'block';
                                 loadAdminAssignedActivities();
+                                
                             } else {
                                 alert('Invalid email address or unauthorized access');
                             }
