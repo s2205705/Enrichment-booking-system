@@ -1,0 +1,98 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const sqlite3 = require('sqlite3').verbose();
+const app = express();
+const port = 3000;
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static('public'));
+
+// Create or open a SQLite database
+let db = new sqlite3.Database('./enrichment.db', (err) => {
+    if (err) {
+        console.error(err.message);
+    }
+    console.log('Connected to the enrichment database.');
+});
+
+// Create tables if not exists
+db.run(`CREATE TABLE IF NOT EXISTS activities (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    date TEXT NOT NULL,
+    time TEXT NOT NULL,
+    location TEXT NOT NULL
+)`);
+
+db.run(`CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    role TEXT NOT NULL CHECK(role IN ('student', 'admin'))
+)`);
+
+db.run(`CREATE TABLE IF NOT EXISTS signups (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    activity_id INTEGER NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(activity_id) REFERENCES activities(id)
+)`);
+
+// Serve the index.html file
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
+
+// Handle form submissions for scheduling an activity
+app.post('/schedule-activity', (req, res) => {
+    const { title, description, date, time, location } = req.body;
+    db.run(`INSERT INTO activities (title, description, date, time, location) VALUES (?, ?, ?, ?, ?)`,
+        [title, description, date, time, location],
+        function (err) {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send("Error scheduling activity.");
+            } else {
+                res.send("Activity scheduled successfully!");
+            }
+        });
+});
+
+// Handle form submissions for signing up for an activity
+app.post('/sign-up', (req, res) => {
+    const { userId, activityId } = req.body;
+    db.run(`INSERT INTO signups (user_id, activity_id) VALUES (?, ?)`,
+        [userId, activityId],
+        function (err) {
+            if (err) {
+                console.error(err.message);
+                res.status(500).send("Error signing up for activity.");
+            } else {
+                res.send("Signed up for activity successfully!");
+            }
+        });
+});
+
+// Handle login submissions
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+    db.get(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, password], (err, row) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send("Error logging in.");
+        } else if (row) {
+            res.send({ success: true, role: row.role });
+        } else {
+            res.status(401).send("Invalid credentials.");
+        }
+    });
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
+});
