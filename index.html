@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Enrichment Booking System</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
-    <script src="scripts.js"></script>
+
     <style>
+        /* Common Styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -19,6 +21,142 @@
             color: #333;
         }
 
+        /* Styles for Login Page */
+        #login-page {
+          display: flex;
+           
+            background: radial-gradient(circle, #b71c1c, #7f0000);
+           display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 500px; /* Adjusted to fit content better */
+            text-align: center;
+        }
+
+        .logo {
+            width: 100%;
+            max-width: 450px;
+            height: 80px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b71c1c;
+            font-size: 20px;
+            font-weight: 700;
+            background-image: url('https://www.kslog.com/wp-content/uploads/2023/08/ks-logistic-web-order-icon-auftragsvergabe.png');
+            background-size: 40px 40px;
+            background-repeat: no-repeat;
+            background-position: left center;
+            padding-left: 60px;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-sizing: border-box;
+            display: none; /* Initially hide both forms */
+        }
+
+        .container.active {
+            display: block; /* Show the active form */
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #444;
+            margin: 0;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #b71c1c;
+            box-shadow: 0 0 10px rgba(183, 28, 28, 0.5);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #ff8a80, #d32f2f);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #ff5252, #b71c1c);
+            transform: translateY(-2px);
+        }
+
+        .link {
+            margin-top: 25px;
+        }
+
+        .link a {
+            color: #b71c1c;
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .link a:hover {
+            color: #ff5252;
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #b71c1c;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        /* Styles for Main Menu */
+        #main-menu {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+        
         nav {
             background: linear-gradient(90deg, #c8102e, #a00);
             color: white;
@@ -55,6 +193,39 @@
         nav ul li a:hover {
             color: #ffebeb;
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+        .navbar {
+          background-color: #333;
+          overflow: hidden;
+          padding: 10px;
+          
+        }
+
+        .navbar a {
+          color: white;
+          padding: 14px 20px;
+          text-decoration: none;
+          float: left;
+          
+        }
+        
+        .navbar a:hover {
+          background-color: #ddd;
+          color: black;
+          
+        }
+
+        .navbar .navbar-right {
+          float: right;
+          
+        }
+        
+        .navbar #user-icon {
+          color: white;
+          padding: 14px 20px;
+          display: inline-block;
+          margin-right: 10px;
+          
         }
 
         .logo {
@@ -282,21 +453,82 @@
             color: #c8102e;
             font-weight: 700;
         }
+        .scheduled-activities-list {
+            margin-top: 20px;
+        }
+        }
     </style>
 </head>
+<body>
+
+    <!-- Login Page -->
+    <div id="login-page">
+        <div class="main-container">
+            <div class="logo">
+                Enrichment Booking System
+            </div>
+
+            <!-- Login Form -->
+            <div class="container active" id="login-container">
+                <h2>Sign in to your account</h2>
+                <form id="login-form" action="#" method="POST">
+                    <div class="input-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                        <div id="email-error" class="error-message"></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                        <div id="password-error" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="submit-btn">Sign In</button>
+                </form>
+                <div class="link">
+                    <a href="#" id="forgot-password">Can't access your account?</a>
+                </div>
+            </div>
 
 
-    <body>
-        <nav>
-            <img src="" alt="Enrichment Logo" class="logo">
-            <!-- Replace with the actual image URL -->
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#login">Login</a></li>
-            </ul>
+            <!-- Password Reset Form -->
+            <div class="container" id="reset-password-container">
+                <h2>Reset Your Password</h2>
+                <form id="reset-password-form">
+                    <div class="input-group">
+                        <label for="old-password">Old Password</label>
+                        <input type="password" id="old-password" name="old-password" required>
+                        <div id="old-password-error" class="error-message"></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="new-password" required>
+                        <div id="new-password-error" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="submit-btn">Update Password</button>
+                </form>
+                <div class="link">
+                    <a href="#" id="back-to-login">Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu">
+      <div class="body">
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+          <div class="navbar-left">
+            <a href="#" id="home-link">Home</a>
+            <a href="#" id="view-account-link">View Account</a>
+          </div>
+          <div class="navbar-right">
+            <span id="user-icon"></span>
+            <a href="#" id="logout-link">Log Out</a>
+          </div>
         </nav>
-
-        <div id="home" class="main-menu">
+        <script src="scripts.js"></script>
+        <div class="header">
             <h1>Welcome to the Enrichment Booking System</h1>
             <div class="title-container">
                 <div class="title-box">
@@ -531,49 +763,148 @@
                 });
             });
         </script>
-
-        <div id="login" class="main-menu">
-            <h1>Login</h1>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit">Login</button>
-            </form>
-        </div>
     <script>
+        const loginContainer = document.getElementById('login-container');
+        const resetPasswordContainer = document.getElementById('reset-password-container');
+        const forgotPasswordLink = document.getElementById('forgot-password');
+        const backToLoginLink = document.getElementById('back-to-login');
+        const mainMenu = document.getElementById('main-menu');
+        const loginPage = document.getElementById('login-page');
 
-        <!-- Content Security Policy (CSP) to prevent XSS -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; object-src 'none'; frame-ancestors 'none';">
+        // Show password reset container and hide login container
+        forgotPasswordLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            loginContainer.classList.remove('active');
+            resetPasswordContainer.classList.add('active');
+        });
 
-        <!--Content-Type-Options to prevent MIME-sniffing -->
-        <meta http-equiv="X-Content-Type-Options" content="nosniff">
+        // Show login container and hide password reset container
+        backToLoginLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            resetPasswordContainer.classList.remove('active');
+            loginContainer.classList.add('active');
+        });
 
-        <!--Frame-Options to prevent clickjacking -->
-        <meta http-equiv="X-Frame-Options" content="DENY">
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
 
-        <!-- Referrer-Policy to control referrer information -->
-        <meta name="referrer" content="no-referrer-when-downgrade">
+            // Clear previous error messages
+            document.getElementById('email-error').textContent = '';
+            document.getElementById('password-error').textContent = '';
 
-        <!--XSS-Protection to enable the browser's XSS filter -->
-        <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+            // Get form values
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        <!--Secure Form  -->
-        <form action="/submit" method="POST">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <!-- Anti-CSRF Token -->
-            <input type="hidden" name="csrf_token" value="random_generated_token">
-            <button type="submit">Login</button>
-        </form
+            let hasError = false;
 
-        <!-- Input validation that restricts user input in order to prevent SQL injections-->
-        <input type="email" name="email" placeholder="Email Address" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+            // Email validation using regex
+            const emailRegex1 = /^[a-z]+\.[a-z]+@southwark\.ac\.uk$/;
+            const emailRegex2 = /^s\d{7}@students\.southwark\.ac\.uk$/;
+
+            if (!email) {
+                document.getElementById('email-error').textContent = 'Email address is required.';
+                hasError = true;
+            } else if (!emailRegex1.test(email) && !emailRegex2.test(email)) {
+                document.getElementById('email-error').textContent = 'Invalid email address.';
+                hasError = true;
+            }
+
+            if (!password) {
+                document.getElementById('password-error').textContent = 'Password is required.';
+                hasError = true;
+            }
+
+            if (!hasError) {
+                // Simulate successful login
+                alert('Login successful!');
+
+                // Hide the login page and show the main menu
+                loginPage.style.display = 'none';
+                mainMenu.style.display = 'block';
+            }
+        });
+
+        document.getElementById('reset-password-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Clear previous error messages
+            document.getElementById('old-password-error').textContent = '';
+            document.getElementById('new-password-error').textContent = '';
+
+            // Get form values
+            const oldPassword = document.getElementById('old-password').value;
+            const newPassword = document.getElementById('new-password').value;
+
+            let hasError = false;
+
+            if (!oldPassword) {
+                document.getElementById('old-password-error').textContent = 'Old password is required.';
+                hasError = true;
+            }
+
+            if (!newPassword) {
+                document.getElementById('new-password-error').textContent = 'New password is required.';
+                hasError = true;
+            }
+
+            if (!hasError) {
+                // Simulate password update
+                alert('Password updated successfully!');
+                // Redirect or perform further actions
+            }
+        });
+        // scripts.js
+
+        document.addEventListener("DOMContentLoaded", function() {
+    // Assuming you have a way to get the user's email from session or database
+    // Replace this with the actual method you use to get the user's email.
+        const userEmail = document.getElementById('user-email').value; // Assuming there's a hidden input field with the user's email
+        const userName = userEmail.split('@')[0];
+
+    // Set user icon with name
+        document.getElementById('user-icon').textContent = userName;
+
+    // Home link functionality (Show boxes)
+        document.getElementById('home-link').addEventListener('click', function(event) {
+          event.preventDefault();
+          document.getElementById('main-content').style.display = 'block';
+          const accountInfoDiv = document.getElementById('account-info');
+          if (accountInfoDiv) {
+            accountInfoDiv.style.display = 'none';
+            
+          }
+          
+        });
+        
+        // View Account link functionality
+        document.getElementById('view-account-link').addEventListener('click', function(event) {
+          event.preventDefault();
+          document.getElementById('main-content').style.display = 'none';
+          let accountInfoDiv = document.getElementById('account-info');
+          if (!accountInfoDiv) {
+            accountInfoDiv = document.createElement('div');
+            accountInfoDiv.id = 'account-info';
+            document.body.appendChild(accountInfoDiv);
+            
+          }
+          accountInfoDiv.style.display = 'block';
+          accountInfoDiv.innerHTML = `<p>Email: ${userEmail}</p><p>Password: ******</p>`;
+          
+        });
+        
+        // Log Out link functionality
+        document.getElementById('logout-link').addEventListener('click', function(event) {
+          event.preventDefault();
+          // Implement your log out logic here (this could be a server-side call)
+          alert("Logging out...");
+          window.location.href = 'login.html'; // Redirect to login page
+          })
+          
+        });
+
+    </script>
+    
 
 </body>
 </html>
