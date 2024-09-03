@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,15 +24,25 @@
 
         /* Styles for Login Page */
         #login-page {
-          display: flex;
-            background: radial-gradient(circle, #b71c1c, #7f0000);
-           display: flex;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                background: radial-gradient(circle, #b71c1c, #7f0000);
+                color: #333;
+
+        }
+        .main-container {
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            width: 100%;
+            max-width: 500px; /* Adjusted to fit content better */
             text-align: center;
         }
-
         .logo {
             width: 100%;
             max-width: 450px;
@@ -274,13 +285,13 @@
             height: 200px;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px #1414144e
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .title-box:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(248, 233, 233, 0.986);
         }
 
         .title-box a {
@@ -314,7 +325,7 @@
             right: 0;
             padding: 1rem;
             color: white;
-            background: rgba(0, 0, 0, 0.5);
+            background: #f31515eb;
             text-align: center;
             border-radius: 0 0 8px 8px;
             transform: translateY(100%);
@@ -386,7 +397,7 @@
 
         .activity,
         .scheduled-activity {
-            border: 1px solid #ddd;
+            border: 1px solid #d4d4d4;
             padding: 1rem;
             margin: 1rem 0;
             border-radius: 8px;
@@ -452,7 +463,6 @@
         }
         .scheduled-activities-list {
             margin-top: 20px;
-        }
         }
     </style>
 </head>
@@ -851,54 +861,58 @@
                 // Redirect or perform further actions
             }
         });
+
         // scripts.js
 
         document.addEventListener("DOMContentLoaded", function() {
-    // Assuming you have a way to get the user's email from session or database
-    // Replace this with the actual method you use to get the user's email.
-        const userEmail = document.getElementById('user-email').value; // Assuming there's a hidden input field with the user's email
-        const userName = userEmail.split('@')[0];
+            // Check if the user's email is already stored in localStorage
+            let userEmail = sessionStorage.getItem('userEmail');
 
-    // Set user icon with name
-        document.getElementById('user-icon').textContent = userName;
+            if (!userEmail) {
+                // Assuming the email is provided during login and stored in a hidden input field
+                userEmail = document.getElementById('user-email').value;
+                localStorage.setItem('userEmail', userEmail);
+            }
 
-    // Home link functionality (Show boxes)
-        document.getElementById('home-link').addEventListener('click', function(event) {
-          event.preventDefault();
-          document.getElementById('main-content').style.display = 'block';
-          const accountInfoDiv = document.getElementById('account-info');
-          if (accountInfoDiv) {
-            accountInfoDiv.style.display = 'none';
+            const userName = userEmail.split('@')[0];
 
-          }
+            // Set user icon with name
+            document.getElementById('user-icon').textContent = userName;
 
+            // Home link functionality (Show boxes)
+            document.getElementById('home-link').addEventListener('click', function(event) {
+                event.preventDefault();
+                document.getElementById('main-content').style.display = 'block';
+                const accountInfoDiv = document.getElementById('account-info');
+                if (accountInfoDiv) {
+                    accountInfoDiv.style.display = 'none';
+                }
+            });
+
+            // View Account link functionality
+            document.getElementById('view-account-link').addEventListener('click', function(event) {
+                event.preventDefault();
+                document.getElementById('main-content').style.display = 'none';
+                let accountInfoDiv = document.getElementById('account-info');
+                if (!accountInfoDiv) {
+                    accountInfoDiv = document.createElement('div');
+                    accountInfoDiv.id = 'account-info';
+                    document.body.appendChild(accountInfoDiv);
+                }
+                accountInfoDiv.style.display = 'block';
+                accountInfoDiv.innerHTML = `<p>Email: ${userEmail}</p><p>Password: ******</p>`;
+            });
+
+            // Log Out functionality
+            document.getElementById('logout-link').addEventListener('click', function(event) {
+                event.preventDefault();
+                // Clear the stored email when logging out
+                localStorage.removeItem('userEmail');
+                alert("Logging out...");
+                window.location.id = 'login-container'; // Redirect to login page
+            });
         });
 
-        // View Account link functionality
-        document.getElementById('view-account-link').addEventListener('click', function(event) {
-          event.preventDefault();
-          document.getElementById('main-content').style.display = 'none';
-          let accountInfoDiv = document.getElementById('account-info');
-          if (!accountInfoDiv) {
-            accountInfoDiv = document.createElement('div');
-            accountInfoDiv.id = 'account-info';
-            document.body.appendChild(accountInfoDiv);
-
-          }
-          accountInfoDiv.style.display = 'block';
-          accountInfoDiv.innerHTML = `<p>Email: ${userEmail}</p><p>Password: ******</p>`;
-
-        });
-
-        // Log Out link functionality
-        document.getElementById('logout-link').addEventListener('click', function(event) {
-          event.preventDefault();
-          // Implement your log out logic here (this could be a server-side call)
-          alert("Logging out...");
-          window.location.href = 'login.html'; // Redirect to login page
-          })
-
-        });
 
     </script>
 
